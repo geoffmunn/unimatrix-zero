@@ -56,7 +56,7 @@ def next_combination(cur_line, max_number):
         if index < len(cur_line):
             cur_line[index] += 1
         else:
-            index -= 1
+            return False
 
         for i in reversed(range(index)):
             cur_line[i] = cur_line[i + 1] + 1
@@ -179,66 +179,29 @@ final_lines				= []		# This is the list of lines we will return with
 
 lines_from_picked 		= comb(max_number, picked)
 lines_from_length 		= comb(max_number, line_length)
-picked_from_length  	= comb(line_length, picked)
-subsets_from_picked 	= comb(picked, cover)
-subsets_from_length 	= comb(line_length, cover)
-missing_length 			= comb(max_number - cover, line_length - cover)
 
-if picked >= line_length:
-    # This works with:
-    # 15 3 5 2
-    # DOES NOT WORK WITH:
-    # 8,3,4,3
-
-    #max_number 	= 10
-    #line_length	= 6
-    #picked 		= 7
-    #cover	 		= 4
-
-    # Good: 10, 3, 5, 2
-    # Bad:  10, 6, 7, 4
-    #print ("BOO")
-    #print ("line length:",line_length)
-    #print ("picked:",picked)
-    #print ("cover:",cover)
-
-    if picked - line_length == 1:
-        #print ("HIHI")
-        # Works with: 10, 6, 7, 4
-        missing_picked 		= comb(max_number - line_length, picked - line_length)
-    else:
-        # Works with: 15, 3, 5, 2
-        missing_picked 		= comb(max_number - cover - 1, picked - cover - 1)
-
-else:
-    missing_picked 		= -1
-
-missing_picked_cover 	= comb(max_number - cover, picked - cover)
-
-#print ("Missing picked:",missing_picked)
 ###################################
 # Build up the template for covered subsets of the picked numbers
 
 cur_subset = new_template(cover)
-for i in range(subsets_from_picked):
+while True:
     covered_subsets_template.append(cur_subset[:])
     cur_subset = next_combination(cur_subset, picked - 1)
-###################################
+    if cur_subset == False:
+        break
 
-#print ("covered_subsets_template")
-#print (covered_subsets_template)
+###################################
 
 ###################################
 # Build up the template for covered subsets of the length numbers
 
 cur_subset = new_template(cover)
-for i in range(subsets_from_length):
+while True:
     covered_subsets_length_template.append(cur_subset[:])
     cur_subset = next_combination(cur_subset, line_length - 1)
+    if cur_subset == False:
+        break
 ###################################
-
-#print ("covered_subsets_length_template")
-#print (covered_subsets_length_template)
 
 ###################################
 # Now create the template of the missing combinations for the picked line based on the line length
@@ -247,25 +210,24 @@ for i in range(subsets_from_length):
 if picked > line_length:
     if picked > cover:
         cur_subset = new_template(picked - line_length)
-        for i in range(missing_picked):
-            print(i, cur_subset)
+        while True:
             missing_picked_template.append(cur_subset[:])
-            #cur_subset = next_combination(cur_subset, max_number - picked)
             cur_subset = next_combination(cur_subset, max_number - line_length - 1)
+            if cur_subset == False:
+                break
     else:
         missing_picked_template = [[]]
 else:
     if picked < line_length:
         cur_subset = new_template(picked)
-        for i in range(picked_from_length):
+        while True:
             covered_subsets_picked_template.append(cur_subset[:])
             cur_subset = next_combination(cur_subset, picked)
+            if cur_subset == False:
+                break
     else:
         missing_picked_template = [[]]
 ###################################
-
-#print ("missing_picked_template")
-#print (missing_picked_template)
 
 ###################################
 # Now create the template of the missing combinations for the line length numbers
@@ -275,49 +237,50 @@ if line_length > cover:
     cur_subset = new_template(line_length - cover)
     if picked > line_length:
         if picked > cover:
-            for i in range(missing_length):
+            while True:
                 missing_length_template.append(cur_subset[:])
                 cur_subset = next_combination(cur_subset, max_number - cover - 1) 	#-1 is required for 8, 6, 7, 4
+                if cur_subset == False:
+                    break
         else:
             missing_length_template = [[]]
     else:
-        for i in range(missing_length):
+        while True:
             missing_length_template.append(cur_subset[:])
             cur_subset = next_combination(cur_subset, max_number - cover - 1)
+            if cur_subset == False:
+                break
 else:
     missing_length_template = [[]]
 ###################################
-
-#print ("missing_length_template")
-#print (missing_length_template)
 
 ###################################
 # Lastly create the template of missing combinations between cover and picked
 
 if picked > line_length:
     cur_subset = new_template(picked - cover)
-    for i in range(missing_picked_cover):
+    while True:
         missing_picked_cover_template.append(cur_subset[:])
         cur_subset = next_combination(cur_subset, max_number - cover - 1)
+        if cur_subset == False:
+            break
 else:
     if picked > cover:
         cur_subset = new_template(picked - cover)
-        for i in range(missing_picked_cover):
+        while True:
             missing_picked_cover_template.append(cur_subset[:])
             cur_subset = next_combination(cur_subset, max_number - cover - 1)
+            if cur_subset == False:
+                break
     else:
         missing_picked_cover_template = [[]]
 ###################################
 
-#print ("missing_picked_cover_template")
-#print (missing_picked_cover_template)
-#exit()
-
 # Now start generating some lines!
 file_name = "Combo " + str(max_number) + " " + str(line_length) + " " + str(picked) + " " + str(cover) + ".txt"
 
-f = open(file_name, "w")
-f.write("Range: " + str(max_number) + "\nLine length: " + str(line_length) + "\nPicked: " + str(picked) + "\nCover: " + str(cover) + "\nVersion:" + version + "\n\n*****\n")
+f = open('./results/' + file_name, "w")
+f.write("Unimatrix Zero\nVersion: " + version + "\n\nRange: " + str(max_number) + "\nLine length: " + str(line_length) + "\nPicked: " + str(picked) + "\nCover: " + str(cover) + "\n\n*****\n")
 f.close()
 
 # Create the first line:
@@ -367,7 +330,7 @@ for i in range(1, lines_from_picked + 1):
             x2 = 0
             for missing_length_subset in missing_length_template:
                 x2 += 1
-                print (x2,'of',len(missing_length_template),'missing length template')
+                #print (x2,'of',len(missing_length_template),'missing length template')
                 # This full line is a candidate for what can cover the current line
                 candidate_line = templated_subset[:]
                 for j in missing_length_subset:
@@ -385,10 +348,11 @@ for i in range(1, lines_from_picked + 1):
                 coverage_count 		= 0
                 current_length_csns = set()
 
+                #if picked < line_length:
                 x3 = 0
                 for covered_subset in covered_subsets_length_template:
                     x3 += 1
-                    print(x3,'of',len(covered_subsets_length_template),'covered subsets length template')
+                    #print(x3,'of',len(covered_subsets_length_template),'covered subsets length template')
                     # Map each number in $cur_line to a spot in the subset template (length = cover)
                     templated_covered_subset = []
                     for j in covered_subset:
@@ -407,7 +371,7 @@ for i in range(1, lines_from_picked + 1):
                     x4 = 0
                     for missing_picked_cover_subset in missing_picked_cover_template:
                         x4 +=1
-                        print(x4,'of',len(missing_picked_cover_template),'missing picked cover template')
+                        #print(x4,'of',len(missing_picked_cover_template),'missing picked cover template')
                         # This full line is a candidate for what can cover the current line
                         covered_line = templated_covered_subset[:]
                         for j in missing_picked_cover_subset:
@@ -417,24 +381,73 @@ for i in range(1, lines_from_picked + 1):
                         #print ("Full covered line:", covered_line)
 
                         csn = sequence_number(covered_line, max_number)
-                        current_length_csns.add(csn)
+
+                        if csn not in covered_picked_csns:
+                            current_length_csns.add(csn)
 
 
+                #else:
+                #    #Step 4: Build this up to each parent set of $picked
+                #    x3 = 0
+                #    for missing_picked_subset in missing_picked_template:
+                #        x3 += 1
+                #        #print(x3,'of',len(missing_picked_template),'missing picked template')
+                #        full_picked_line = candidate_line[:]
+                #        for j in missing_picked_subset:
+                #            full_picked_line.append(missing_picked_numbers[j])
+                #        full_picked_line.sort()
+
+                #        #print ("Picked line from candidate line:", full_picked_line)
+
+                #        #Step 5: Every subset of length $cover, and then built up from $max_number to $line_length
+                #        x4 = 0
+                #        for candidate_subset in covered_subsets_template:
+                #            x4 += 1
+                #            #print(x4,'of',len(covered_subsets_template),'covered subsets template')
+                #            templated_covered_subset = []
+                #            for j in candidate_subset:
+                #                templated_covered_subset.append(full_picked_line[j])
+
+                #            # Now go through all the subsets of $line_length from $picked
+                #            #print ("current picked line subset:", templated_covered_subset)
+
+                #            # Find the missing numbers from this subset
+                #            missing_candidate_subset_numbers = []
+                #            for j in range(1, max_number + 1):
+                #                if j not in templated_covered_subset:
+                #                    missing_candidate_subset_numbers.append(j)
+
+                            # So now we have the missing numbers for the actual subset of the current line
+                            # Together they should add up to line_length
+                            # Now build this up to lines of length $line_length - these are potential nominated lines
+                #            for missing_final_length_subset in missing_length_template:
+                #                # This full line is a candidate for what can cover the current line
+                #                covered_length_line = templated_covered_subset[:]
+                #                for j in missing_final_length_subset:
+                #                    covered_length_line.append(missing_candidate_subset_numbers[j])
+                #                covered_length_line.sort()
+
+                                #print ("covered line (should be",line_length,"digits long):", covered_length_line)
+
+                #                csn = sequence_number(covered_length_line, max_number)
+
+                                #if csn not in covered_length_csns:
+                 #               if csn not in current_length_csns:
+                 #                   current_length_csns.add(csn)
+                                #    coverage_count += 1
 
                 differences = current_length_csns.difference(covered_length_csns)
                 coverage_count = len(differences)
 
-                #print (coverage_count)
-                #exit()
                 if coverage_count >= max_coverage_count:
                     max_coverage_count 		= coverage_count
                     max_candidate_line 		= candidate_line
                     max_current_length_csns = current_length_csns
 
 
-        #print ("Current picked combo is:", cur_line)
-        #print ("The best line is", max_candidate_line, "which covers", max_coverage_count,"lines")
-        #print ("This covers the following CSNs:",max_current_length_csns)
+        print ("Current picked combo is:", cur_line)
+        print ("The best line is", max_candidate_line, "which covers", max_coverage_count,"lines")
+        print ("This covers the following CSNs:",max_current_length_csns)
         #exit()
 
         if max_coverage_count == 0:
@@ -450,8 +463,6 @@ for i in range(1, lines_from_picked + 1):
                     covered_picked_csns.add(csn)
             else :
                 if line_length == cover:
-                    ################### start
-
                     # in this scenario, we only want to add subsets of the actual current line
                     for subset in covered_subsets_template:
                         # Map each number in $cur_line to a spot in the subset template
@@ -479,11 +490,10 @@ for i in range(1, lines_from_picked + 1):
 
                             covered_csn = sequence_number(candidate_cover, max_number)
                             covered_length_csns.add(covered_csn)
-
-                    ################### end
                 else:
                     for csn in max_current_length_csns:
-                        covered_length_csns.add(csn)
+                        #covered_length_csns.add(csn)
+                        covered_picked_csns.add(csn)
 
             # We need to update the covered csns of picked length so the scan doesn't try covered lines
             # Given the max_candidate_line, we need to get the subsets and then all picked lines that match
@@ -515,11 +525,11 @@ for i in range(1, lines_from_picked + 1):
                     picked_csn = sequence_number(full_picked_line, max_number)
                     covered_picked_csns.add(picked_csn)
 
-            f = open(file_name, "a")
-            f.write(str(len(final_lines)) + ' (' + str(round((len(covered_length_csns)/lines_from_length) * 100, 2)) + '): '  + ' '.join([str(item) for item in max_candidate_line]) + "\n")
+            f = open('./results/' + file_name, "a")
+            f.write(str(len(final_lines)) + ' (' + str(round((len(covered_picked_csns)/lines_from_picked) * 100, 2)) + '%): '  + ' '.join([str(item) for item in max_candidate_line]) + "\n")
             f.close()
 
-        if len(covered_length_csns) == lines_from_length:
+        if len(covered_picked_csns) == lines_from_picked:
             break;
 
     # Get the next line, only if this wasn't the last combination
@@ -528,9 +538,53 @@ for i in range(1, lines_from_picked + 1):
 end_time = time.time() - start_time
 print("--- %s seconds ---" %end_time )
 
-f = open(file_name, "a")
+f = open('./results/' + file_name, "a")
 f.write("*****\nTotal number of lines: " + str(len(final_lines)))
 f.write("\nTime taken: " + str(end_time))
 f.close()
 
 summary(covered_picked_csns, lines_from_picked, final_lines)
+
+# Run a test of all the picked numbers and check that the guarantee appears in one of the lines
+# Create the first line:
+cur_line = []
+for j in range(picked, 0, -1):
+    cur_line.append(j)
+
+# Step 1: Take the next line or $picked length
+for i in range(1, lines_from_picked + 1):
+
+    print ('*********')
+    print (i, cur_line)
+
+    # Go through each subset of $cur_line. These are of size $covered from $picked
+    # Step 2: Take each subset of size $cover
+    found = False
+    for subset in covered_subsets_template:
+        # Map each number in $cur_line to a spot in the subset template
+        templated_subset = []
+        for j in subset:
+            templated_subset.append(cur_line[j])
+
+        print ("Testing:",templated_subset)
+
+        # Now go through each final line
+        count = 0
+        for final_line in final_lines:
+            count = 0
+            for j in templated_subset:
+                if j in final_line:
+                    count += 1
+
+            print ("checking",final_line,'(',count,')')
+
+            if count >= cover:
+                found = True
+
+    if found == False:
+        print ('Line',cur_line,' DOES NOT MEET COVERAGE')
+        exit()
+    else:
+        print ("all good!")
+
+    cur_line = next_combination(cur_line, max_number)
