@@ -1,0 +1,16 @@
+Unimatrix Zero
+Version: 1.2
+
+Range: 10
+Line length: 6
+Picked: 4
+Cover: 3
+
+*****
+1 (45.24%): 1 2 3 8 9 10
+2 (82.86%): 1 2 4 5 6 7
+3 (97.14%): 3 4 5 8 9 10
+4 (100.0%): 3 6 7 8 9 10
+*****
+Total number of lines: 4
+Time taken: 2.0198779106140137
