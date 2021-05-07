@@ -40,13 +40,13 @@ def main():
         line_length	= 6
         picked 		= 5
         cover 		= 5
-        line_count	= 56
+        line_count	= 59
     elif test_case == 'test6':
         max_number 	= 10
         line_length	= 6
         picked 		= 4
         cover 		= 4
-        line_count	= 24
+        line_count	= 23
     elif test_case == 'test7':
         max_number 	= 10
         line_length	= 6
@@ -79,8 +79,12 @@ def main():
     else:
         if len(results) > line_count:
             print ("Test FAILED: more lines than expected")
+            print ("Run this command to see the results:")
+            print ("python generator.py",max_number,line_length,picked,cover,"testmode")
         else:
             print ("Test FAILED: fewer lines than expected")
+            print ("Run this command to see the results:")
+            print ("python generator.py",max_number,line_length,picked,cover,"testmode")
 
 if __name__ == "__main__":
     main()
