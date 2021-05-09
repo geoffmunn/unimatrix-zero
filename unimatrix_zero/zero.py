@@ -169,7 +169,7 @@ def create(max_number, line_length, picked, cover, testmode, path):
                 # Write this line to the output file
                 if testmode == False:
                     f = open(path, "a")
-                    f.write(str(len(final_lines)) + ' (' + str(round((len(covered_picked_csns)/lines_from_picked) * 100, 2)) + '%): '  + ' '.join([str(item) for item in max_candidate_line]) + "\n")
+                    f.write(str(len(final_lines)) + ' (' + str(round((coverage_total/lines_from_picked) * 100, 2)) + '%): '  + ' '.join([str(item) for item in max_candidate_line]) + "\n")
                     f.close()
 
             # If we have covered all the $picked CSNs, then we can finish!
