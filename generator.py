@@ -11,22 +11,28 @@ def main():
     parser.add_argument('line_length', help = 'Length of each line in this wheel', type = int)
     parser.add_argument('picked', help = 'How many numbers are picked?', type = int)
     parser.add_argument('cover', help = 'How many numbers in each line do you want covered?', type = int)
-    parser.add_argument('testmode', help = 'Run this as a test only', nargs = '?', const = False, type = bool)
+    parser.add_argument('-mode', help = 'Run this as a test only', nargs = '?', type = str, default = '')
+
     args = parser.parse_args()
 
     max_number 	= args.max_number
     line_length = args.line_length
     picked 		= args.picked
     cover 		= args.cover
-    testmode 	= args.testmode
+    mode 		= args.mode
 
-    if testmode is None:
-        testmode = False
+    testmode	= False
+    rebuild		= False
+
+    if mode == 'test':
+        testmode = True
+    elif mode == 'rebuild':
+        rebuild = True
 
     file_name	= "Combo " + str(max_number) + " " + str(line_length) + " " + str(picked) + " " + str(cover) + ".txt"
     path 		= './results/' + file_name
 
-    if os.path.isfile(path) and testmode != True:
+    if os.path.isfile(path) and testmode != True and rebuild == False:
         print ("Combo already exists, exiting")
         exit()
 

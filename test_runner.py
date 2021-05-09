@@ -80,11 +80,11 @@ def main():
         if len(results) > line_count:
             print ("Test FAILED: more lines than expected")
             print ("Run this command to see the results:")
-            print ("python generator.py",max_number,line_length,picked,cover,"testmode")
+            print ("python generator.py",max_number,line_length,picked,cover,"-mode=test")
         else:
             print ("Test FAILED: fewer lines than expected")
             print ("Run this command to see the results:")
-            print ("python generator.py",max_number,line_length,picked,cover,"testmode")
+            print ("python generator.py",max_number,line_length,picked,cover,"-mode=test")
 
 if __name__ == "__main__":
     main()
