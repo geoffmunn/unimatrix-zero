@@ -24,7 +24,7 @@ def create(max_number, line_length, picked, cover, testmode, path):
     # Now start generating some lines!
     if testmode == False:
         f = open(path, "w")
-        f.write("Unimatrix Zero\nVersion: " + version + "\n\nRange: " + str(max_number) + "\nLine length: " + str(line_length) + "\nPicked: " + str(picked) + "\nCover: " + str(cover) + "\n\n*****\n")
+        f.write("Unimatrix Zero\nVersion: " + version + "\n\nRange:       " + str(max_number) + "\nLine length: " + str(line_length) + "\nPicked:      " + str(picked) + "\nCover:       " + str(cover) + "\n\n*****\n")
         f.close()
 
     # Create the first line:
