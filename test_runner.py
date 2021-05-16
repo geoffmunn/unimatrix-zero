@@ -64,7 +64,7 @@ def main():
         line_length	= 3
         picked 		= 6
         cover 		= 3
-        line_count	= 12
+        line_count	= 14
     elif test_case == 'test10':
         max_number	= 10
         line_length = 3

@@ -81,7 +81,7 @@ def next_combination(cur_line, max_number):
 
     return cur_line
 
-def new_template(length):
+def new_template(length, zero_based = True):
     '''
     Set up a basic list with numbers in reverse order
 
@@ -92,9 +92,13 @@ def new_template(length):
         cur_subset 	(list): A single list item
     '''
 
+    offset = 0
+    if zero_based == True:
+        offset = 1
+
     cur_subset = []
     for j in range(length, 0, -1):
-        cur_subset.append(j - 1)
+        cur_subset.append(j - offset)
 
     return cur_subset
 

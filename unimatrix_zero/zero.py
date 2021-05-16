@@ -6,20 +6,20 @@ from unimatrix_zero import zero_functions
 
 def create(max_number, line_length, picked, cover, testmode, path):
 
-    version 		= '1.3.1'
-    start_time 		= time.time()
-    bottom_index 	= 1
-    max_coverage 	= -1
+    version			= '1.3.1'
+    start_time		= time.time()
+    bottom_index	= 1
+    max_coverage	= -1
 
     covered_subsets_template		= zero_functions.covered_subsets_template(picked, cover)
-    covered_subsets_length_template = zero_functions.covered_subsets_length_template(line_length, cover)
-    missing_length_template 		= zero_functions.missing_length_template(max_number, line_length, picked, cover)
-    missing_picked_cover_template 	= zero_functions.missing_picked_cover_template(max_number, line_length, picked, cover)
+    covered_subsets_length_template	= zero_functions.covered_subsets_length_template(line_length, cover)
+    missing_length_template			= zero_functions.missing_length_template(max_number, line_length, picked, cover)
+    missing_picked_cover_template	= zero_functions.missing_picked_cover_template(max_number, line_length, picked, cover)
 
     current_csns		= set()
     covered_picked_csns	= set()		# This is the canonical list of picked lines we have covered
     final_lines			= []		# This is the list of lines we will return with
-    lines_from_picked 	= comb(max_number, picked)
+    lines_from_picked	= comb(max_number, picked)
 
     # Now start generating some lines!
     if testmode == False:
@@ -44,13 +44,13 @@ def create(max_number, line_length, picked, cover, testmode, path):
 
             # Reset the maximum statistics because we're starting a new line search
             max_coverage_count	= 0
-            max_candidate_line 	= []
-            max_current_csns 	= set()
+            max_candidate_line	= []
+            max_current_csns	= set()
 
             # Step 2: Go through each subset of $cur_line. These are of size $covered from $picked
             # $covered cannot be larger than $line_length (or $picked)
-            loop_count 	= 0
-            loop_max 	= len(covered_subsets_template)
+            loop_count	= 0
+            loop_max	= len(covered_subsets_template)
             for subset in covered_subsets_template:
                 loop_count += 1
                 print (loop_count,'of',loop_max,'covered subsets')

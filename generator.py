@@ -29,11 +29,11 @@ def main():
     elif mode == 'rebuild':
         rebuild = True
 
-    file_name	= "Combo " + str(max_number) + " " + str(line_length) + " " + str(picked) + " " + str(cover) + ".txt"
+    file_name	= "Wheel " + str(max_number) + " " + str(line_length) + " " + str(picked) + " " + str(cover) + ".txt"
     path 		= './results/' + file_name
 
     if os.path.isfile(path) and testmode != True and rebuild == False:
-        print ("Combo already exists, exiting")
+        print ("Wheel already exists, exiting")
         exit()
 
     results = zero.create(max_number, line_length, picked, cover, testmode, path)
@@ -45,6 +45,7 @@ def main():
     else:
         print ("Total lines: " + str(len(results)))
         print ("Written to file " + file_name)
+        print ("Create a coverage report by running python coverage.py "  + str(max_number) + " " + str(line_length) + " " + str(picked) + " " + str(cover))
 
 if __name__ == "__main__":
     """ This is executed when run from the command line """
