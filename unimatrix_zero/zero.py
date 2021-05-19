@@ -114,7 +114,7 @@ def create(max_number, line_length, picked, cover, testmode, path):
 
                             # If the CSN is below the bottom-most index, then we can assume it's covered
                             # This should be a bit quicker for very large wheels
-                            if csn >= bottom_index:
+                            if csn > bottom_index:
                                 if csn not in covered_picked_csns:
                                     current_csns.add(csn)
                             else:
@@ -128,7 +128,7 @@ def create(max_number, line_length, picked, cover, testmode, path):
                         max_coverage = coverage_count
 
                     # If this is the current best result, then keep a copy of it:
-                    if coverage_count > max_coverage_count:
+                    if coverage_count >= max_coverage_count:
                         max_coverage_count	= coverage_count
                         max_candidate_line 	= candidate_line
                         max_current_csns 	= current_csns
@@ -169,7 +169,7 @@ def create(max_number, line_length, picked, cover, testmode, path):
                 # Write this line to the output file
                 if testmode == False:
                     f = open(path, "a")
-                    f.write(str(len(final_lines)) + ' (' + str(round((coverage_total/lines_from_picked) * 100, 2)) + '%): '  + ' '.join([str(item) for item in max_candidate_line]) + "\n")
+                    f.write(str(len(final_lines)) + ' (' + str('{:.2f}'.format((coverage_total/lines_from_picked) * 100)) + '%): '  + ' '.join([str(item) for item in max_candidate_line]) + "\n")
                     f.close()
 
             # If we have covered all the $picked CSNs, then we can finish!
@@ -185,7 +185,7 @@ def create(max_number, line_length, picked, cover, testmode, path):
     if testmode == False:
         f = open(path, "a")
         f.write("*****\nTotal number of lines: " + str(len(final_lines)))
-        f.write("\nTime taken: " + str(end_time))
+        f.write("\nTime taken: " + str(end_time) + '\n')
         f.close()
 
     return final_lines
