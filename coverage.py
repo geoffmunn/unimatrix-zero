@@ -16,7 +16,6 @@ def get_best(picked, cover, max_number, lines):
     coverage	= {}
     nCr			= 0
 
-    #for i in range(2, picked + 1):
     for i in range(2, cover + 1):
         best_subset[i]	= []
         best_count[i]	= 0
@@ -27,7 +26,6 @@ def get_best(picked, cover, max_number, lines):
         nCr += 1
         # Take this subset and check to see if it's found in the list
 
-        #for i in range(2, picked + 1):
         for i in range(2, cover + 1):
             line_count[i] = 0
 
@@ -46,7 +44,6 @@ def get_best(picked, cover, max_number, lines):
                     line_count[i] 	+= 1
                     coverage[i].add(zero_functions.sequence_number(ordered_subset, max_number))
 
-        #for i in range(2, picked + 1):
         for i in range(2, cover + 1):
             if line_count[i] >= best_count[i]:
                 if line_count[i] > best_count[i]:
@@ -79,10 +76,15 @@ def main():
     file_name	= "Wheel " + str(max_number) + " " + str(line_length) + " " + str(picked) + " " + str(cover) + ".txt"
     path 		= './results/' + file_name
 
+    if os.path.isfile(path) == False:
+        print ("Wheel file does not exist, exiting")
+        exit()
+
     file = open(path, 'r', newline='\n')
 
     lines	= []
     read	= False
+    valid	= False
     newfile	= []
 
     while True:
@@ -97,18 +99,24 @@ def main():
 
         if read == True:
             if line[0:5] != '*****':
-                bit2 = list(map(int, line.split(': ')[1].replace("\n", '').split(' ')))
-                lines.append(bit2)
+                if line != '':
+                    bit2 = list(map(int, line.split(': ')[1].replace("\n", '').split(' ')))
+                    lines.append(bit2)
 
         newfile.append(line)
 
         if len(line) > 11 and line[0:11] == 'Time taken:':
+            valid = True
             break
 
         if not line:
             break
 
     file.close()
+
+    if valid == False:
+        print ('This wheel does not seem to be complete - please rebuild it')
+        exit()
 
     hits_col = len(str(line_length) + ' if ' + str(line_length) + ' ')
     hits_text = ('Hits' + (' ' * hits_col))[0:hits_col]
@@ -150,7 +158,7 @@ def main():
                 if len(covered_val) < len(covered_text):
                     covered_val = (covered_val + (' ' * covered_col))[0:covered_col]
 
-                precent_val = (str(round(len(hits[i])/nCr*100,2)) + '       ')[0:7]
+                precent_val = str('{:.2f}'.format(len(hits[i])/nCr*100) + '       ')[0:7]
 
                 best_val = (str(best_count[i]) + '         ')[0:9]
 
