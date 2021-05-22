@@ -29,10 +29,10 @@ def main():
     elif mode == 'rebuild':
         rebuild = True
 
-    file_name	= "Wheel " + str(max_number) + " " + str(line_length) + " " + str(picked) + " " + str(cover) + ".txt"
+    file_name	= 'Wheel ' + str(max_number) + ' ' + str(line_length) + ' ' + str(picked) + ' ' + str(cover)
     path 		= './results/' + file_name
 
-    if os.path.isfile(path) and testmode != True and rebuild == False:
+    if os.path.isfile(path + '.txt') and testmode != True and rebuild == False:
         print ("Wheel already exists, exiting")
         exit()
 

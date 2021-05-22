@@ -1,20 +1,49 @@
 #!/usr/bin/env python
 
 import time
+import os
 from math import comb
 from unimatrix_zero import zero_functions
 
+def convert(seconds):
+    status 				= ''
+    seconds 			= round(seconds, 2)
+    minutes, seconds 	= divmod(seconds, 60)
+    hours, minutes 		= divmod(minutes, 60)
+
+    periods 	= [('hours', hours), ('minutes', minutes), ('seconds', seconds)]
+    time_string = ', '.join('{} {}'.format(value, name)
+                            for name, value in periods
+                            if value)
+
+    result = '{} {}'.format(status, time_string).strip()
+
+    if result == '':
+        result = '0.01 seconds'
+
+    return result
+
 def create(max_number, line_length, picked, cover, testmode, path):
 
-    version			= '1.3.1'
+    version			= '1.3.2'
     start_time		= time.time()
-    bottom_index	= 1
     max_coverage	= -1
+    bottom_index	= 1
+
+    # Dirty workaround alert! I'm not sure how to properly fix this.
+    # In the cases of 8 2 2 2, bottom_index needs to be zero
+    if picked >= line_length:
+        bottom_index = 0
 
     covered_subsets_template		= zero_functions.covered_subsets_template(picked, cover)
     covered_subsets_length_template	= zero_functions.covered_subsets_length_template(line_length, cover)
     missing_length_template			= zero_functions.missing_length_template(max_number, line_length, picked, cover)
     missing_picked_cover_template	= zero_functions.missing_picked_cover_template(max_number, line_length, picked, cover)
+
+    #print (covered_subsets_template)
+    #print (covered_subsets_length_template)
+    #print (missing_length_template)
+    #print (missing_picked_cover_template)
 
     current_csns		= set()
     covered_picked_csns	= set()		# This is the canonical list of picked lines we have covered
@@ -23,7 +52,7 @@ def create(max_number, line_length, picked, cover, testmode, path):
 
     # Now start generating some lines!
     if testmode == False:
-        f = open(path, "w")
+        f = open(path + '.progress', "w")
         f.write("Unimatrix Zero\nVersion: " + version + "\n\nRange:       " + str(max_number) + "\nLine length: " + str(line_length) + "\nPicked:      " + str(picked) + "\nCover:       " + str(cover) + "\n\n*****\n")
         f.close()
 
@@ -79,6 +108,7 @@ def create(max_number, line_length, picked, cover, testmode, path):
                         candidate_line.append(missing_subset_numbers[j])
                     candidate_line.sort()
 
+                    #print ("candidate line:",candidate_line)
                     # Reset the coverage statistics:
                     coverage_count	= 0
                     current_csns 	= set()
@@ -93,6 +123,7 @@ def create(max_number, line_length, picked, cover, testmode, path):
                             templated_covered_subset.append(candidate_line[j])
                         templated_covered_subset.sort()
 
+                        #print ("Templated covered subset:",templated_covered_subset)
                         # Find the missing numbers from this subset
                         missing_candidate_subset_numbers = []
                         for j in range(1, max_number + 1):
@@ -108,14 +139,17 @@ def create(max_number, line_length, picked, cover, testmode, path):
                                 covered_picked_line.append(missing_candidate_subset_numbers[j])
                             covered_picked_line.sort()
 
+                            #print ("Covered picked line:",covered_picked_line)
                             # This full line is a candidate for what can cover $cur_line
                             # Get the CSN so we can check if we've already got it:
                             csn = zero_functions.sequence_number(covered_picked_line, max_number)
 
                             # If the CSN is below the bottom-most index, then we can assume it's covered
                             # This should be a bit quicker for very large wheels
+                            #print (csn,'vs',bottom_index)
                             if csn > bottom_index:
                                 if csn not in covered_picked_csns:
+                                    #print ("adding to covered csns")
                                     current_csns.add(csn)
                             else:
                                 below_count.add(csn)
@@ -168,7 +202,7 @@ def create(max_number, line_length, picked, cover, testmode, path):
 
                 # Write this line to the output file
                 if testmode == False:
-                    f = open(path, "a")
+                    f = open(path + '.progress', "a")
                     f.write(str(len(final_lines)) + ' (' + str('{:.2f}'.format((coverage_total/lines_from_picked) * 100)) + '%): '  + ' '.join([str(item) for item in max_candidate_line]) + "\n")
                     f.close()
 
@@ -180,12 +214,15 @@ def create(max_number, line_length, picked, cover, testmode, path):
         cur_line = zero_functions.next_combination(cur_line, max_number)
 
     end_time = time.time() - start_time
-    print("--- %s seconds ---" %end_time )
+    print ('--- ' + str(convert(end_time)) + ' ---')
 
     if testmode == False:
-        f = open(path, "a")
+        f = open(path + '.progress', "a")
         f.write("*****\nTotal number of lines: " + str(len(final_lines)))
-        f.write("\nTime taken: " + str(end_time) + '\n')
+        f.write("\nTime taken: " + str(convert(end_time)) + '\n')
         f.close()
+
+        os.rename(path + '.progress', path + '.txt')
+
 
     return final_lines

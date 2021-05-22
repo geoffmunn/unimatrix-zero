@@ -71,7 +71,7 @@ def main():
     picked 		= args.picked
     cover 		= args.cover
 
-    version = str('1.0')
+    version = str('1.00')
 
     file_name	= "Wheel " + str(max_number) + " " + str(line_length) + " " + str(picked) + " " + str(cover) + ".txt"
     path 		= './results/' + file_name
