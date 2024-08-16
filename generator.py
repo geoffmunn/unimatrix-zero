@@ -26,19 +26,19 @@ def main():
     file_name	= "Combo " + str(max_number) + " " + str(line_length) + " " + str(picked) + " " + str(cover) + ".txt"
     path 		= './results/' + file_name
 
-    if os.path.isfile(path) and testmode != True:
-        print ("Combo already exists, exiting")
-        exit()
+    # if os.path.isfile(path) and testmode != True:
+    #     print ("Combo already exists, exiting")
+    #     exit()
 
     results = zero.create(max_number, line_length, picked, cover, testmode, path)
 
-    if testmode == True:
-        print (results)
-        print ("Total lines: " + str(len(results)))
-        print ("Test mode - no file was updated")
-    else:
-        print ("Total lines: " + str(len(results)))
-        print ("Written to file " + file_name)
+    # if testmode == True:
+    #     print (results)
+    #     print ("Total lines: " + str(len(results)))
+    #     print ("Test mode - no file was updated")
+    # else:
+    #     print ("Total lines: " + str(len(results)))
+    #     print ("Written to file " + file_name)
 
 if __name__ == "__main__":
     """ This is executed when run from the command line """
