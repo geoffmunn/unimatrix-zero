@@ -278,35 +278,35 @@ def create(max_number, line_length, picked, cover, testmode, path):
             # get the best pair.
             # To do this, we need every uncovered candidate, and their coverage:
 
-            test = next_line(covered_subsets_template, covered_subsets_length_template, missing_picked_cover_template, missing_length_template, covered_picked_csns, cur_line, max_number, bottom_index)
+            first_line = next_line(covered_subsets_template, covered_subsets_length_template, missing_picked_cover_template, missing_length_template, covered_picked_csns, cur_line, max_number, bottom_index)
             #print ('next lines:', test)
 
             combined_coverage_count = -1
             pair_candidate_lines = {}
             combined_csns = []
-            for line in test:
+            for line in first_line:
 
                 print ('**************************')
-                print ('we want to simulate', line, ' which covers ',len(test[line]),' CSNs:', test[line])
+                print ('we want to simulate', line, ' which covers ',len(first_line[line]),' CSNs:', first_line[line])
 
                 # Now we need to find the next line available
                 cur_line2 = copy.copy(cur_line)
                 #print ('cur line:', cur_line)
                 #print ('cur_line2 has been reset to:', cur_line2)
                 #print ('existing covered csns:', covered_picked_csns)
-                temp_covered_picked_csns = test[line].union(covered_picked_csns)
+                temp_covered_picked_csns = first_line[line].union(covered_picked_csns)
 
                 #print ('total at this point:', len(temp_covered_picked_csns), 'vs', )
                 if len(temp_covered_picked_csns) == lines_from_picked:
                     print ('TOTAL COVERAGE FOUND!')
                     pair_candidate_lines = {}
                     combined_csns = []
-                    combined_csns = test[line]
-                    pair_candidate_lines[line] = str('{:.2f}'.format(((coverage_total + len(test[line]))/lines_from_picked) * 100)) + '%'
-                    combined_coverage_count = len(test[line])
+                    combined_csns = first_line[line]
+                    pair_candidate_lines[line] = str('{:.2f}'.format(((coverage_total + len(first_line[line]))/lines_from_picked) * 100)) + '%'
+                    combined_coverage_count = len(first_line[line])
 
                     print ('new candidate:')
-                    print ('line 1:', line, '(',len(test[line]),')')
+                    print ('line 1:', line, '(',len(first_line[line]),')')
                     print ('covered CSNs:', combined_csns)
                     print ('combined coverage:', combined_coverage_count)
         
@@ -318,20 +318,20 @@ def create(max_number, line_length, picked, cover, testmode, path):
                         if j >= bottom_index and j not in temp_covered_picked_csns:
                             max_coverage_count, max_candidate_line, max_current_csns = scan(covered_subsets_template, covered_subsets_length_template, missing_picked_cover_template, missing_length_template, temp_covered_picked_csns, cur_line2, max_number, bottom_index)
 
-                            temp_records[line + '/' + ' '.join([str(item) for item in max_candidate_line])] = max_coverage_count + len(test[line])
+                            temp_records[line + '/' + ' '.join([str(item) for item in max_candidate_line])] = max_coverage_count + len(first_line[line])
 
                             #print ('max coverage count:', (max_coverage_count + len(test[line])), 'vs', combined_coverage_count)
-                            if max_coverage_count + len(test[line]) > combined_coverage_count:
+                            if max_coverage_count + len(first_line[line]) > combined_coverage_count:
                                 
                                 pair_candidate_lines = {}
                                 combined_csns = []
-                                combined_csns = max_current_csns.union(test[line])
-                                pair_candidate_lines[line] = str('{:.2f}'.format(((coverage_total + len(test[line]))/lines_from_picked) * 100)) + '%'
+                                combined_csns = max_current_csns.union(first_line[line])
+                                pair_candidate_lines[line] = str('{:.2f}'.format(((coverage_total + len(first_line[line]))/lines_from_picked) * 100)) + '%'
                                 pair_candidate_lines[' '.join([str(item) for item in max_candidate_line])] = str('{:.2f}'.format(((coverage_total + len(combined_csns)) / lines_from_picked) * 100)) + '%'
-                                combined_coverage_count = max_coverage_count + len(test[line])
+                                combined_coverage_count = max_coverage_count + len(first_line[line])
 
                                 print ('new candidate:')
-                                print ('line 1:', line, '(',len(test[line]),')')
+                                print ('line 1:', line, '(',len(first_line[line]),')')
                                 print ('line 2:', max_candidate_line, '(',max_coverage_count,')')
                                 print ('covered CSNs:', combined_csns)
                                 print ('combined coverage:', combined_coverage_count)
