@@ -2,7 +2,7 @@
 
 from math import comb
 
-def sequence_number(cur_line, max_number):
+def sequence_number(cur_line, max_number) -> int:
     '''
     This will return the sequence number for the provided combination (CSN)
     It is a port of a script found here: https://saliu.com/combination.html
@@ -45,7 +45,7 @@ def sequence_number(cur_line, max_number):
 
     return csn
 
-def next_combination(cur_line, max_number):
+def next_combination(cur_line, max_number) -> list:
     '''
     Get the next value of the provided combination
     NOTE: for speed purposes, we are using DESCENDING array values
@@ -81,7 +81,7 @@ def next_combination(cur_line, max_number):
 
     return cur_line
 
-def new_template(length, zero_based = True):
+def new_template(length, zero_based = True) -> list:
     '''
     Set up a basic list with numbers in reverse order
 
@@ -102,7 +102,7 @@ def new_template(length, zero_based = True):
 
     return cur_subset
 
-def covered_subsets_template(picked, cover):
+def covered_subsets_template(picked, cover) -> list:
     '''
     Create a template of the subsets of size $cover from $picked
 
@@ -127,7 +127,7 @@ def covered_subsets_template(picked, cover):
 
     return results
 
-def covered_subsets_length_template(line_length, cover):
+def covered_subsets_length_template(line_length, cover) -> list:
     '''
     Build up the template for covered subsets of the length numbers
 
@@ -150,7 +150,7 @@ def covered_subsets_length_template(line_length, cover):
 
     return results
 
-def missing_length_template(max_number, line_length, picked, cover):
+def missing_length_template(max_number, line_length, picked, cover) -> list:
     '''
     Create the template of the missing combinations for the $line_length numbers
     We need special accomodations for when picked is less than or equal to the line length or cover
@@ -191,7 +191,7 @@ def missing_length_template(max_number, line_length, picked, cover):
 
     return results
 
-def missing_picked_cover_template(max_number, line_length, picked, cover):
+def missing_picked_cover_template(max_number, line_length, picked, cover) -> list:
     '''
     Create the template of missing combinations between $cover and $picked
 
