@@ -178,7 +178,7 @@ def scan(covered_subsets_template: list, covered_subsets_length_template: list, 
             coverage_count: int = len(differences)
 
             # If this is the current best result, then keep a copy of it:
-            if coverage_count >= max_coverage_count:
+            if coverage_count > max_coverage_count:
                 max_coverage_count: int	 = coverage_count
                 max_candidate_line: list = candidate_line
                 max_current_csns: list 	 = current_csns
@@ -217,6 +217,8 @@ def create(max_number: int, line_length: int, picked: int, cover: int, testmode:
         cur_line.append(j)
 
     coverage_total: int = 0
+
+    mode: str = '>='
 
     # Step 1: Take the next line of $picked length
     for i in range(1, lines_from_picked + 1):
@@ -272,7 +274,7 @@ def create(max_number: int, line_length: int, picked: int, cover: int, testmode:
         
                     break
     
-                else :
+                else:
                     
                     # Otherwise, go through every line from here and find the first one that's not covered
                     for j in range(i + 1, lines_from_picked + 1):
@@ -311,7 +313,8 @@ def create(max_number: int, line_length: int, picked: int, cover: int, testmode:
             print ('the best combo is:', candidate_lines)
             print ('this combo covers:', combined_csns, '(', len(combined_csns), ')')
             print ('total covered csns:', covered_picked_csns, len(covered_picked_csns))
-            
+            print (((coverage_total + len(first_line[line])) / lines_from_picked) * 100, mode)
+
             if testmode == False:
                 f = open(path + '.progress', "a")
                 count: int = 1
