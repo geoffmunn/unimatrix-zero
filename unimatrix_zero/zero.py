@@ -182,7 +182,7 @@ def get_best_line(covered_subsets_template: list, covered_subsets_length_templat
 
             # If this is the current best result, then keep a copy of it
             # NOTE: this can be either >= or >
-            if coverage_count >= max_coverage_count:
+            if coverage_count > max_coverage_count:
                 max_coverage_count = coverage_count
                 max_candidate_line = candidate_line
                 max_current_csns   = current_csns
@@ -217,8 +217,8 @@ def create(max_number, line_length, picked, cover, testmode, path):
 
     # Create the first line. This assumes we start with CSN 1 -  1 2 3 4 5 6 (for example)
     cur_line = []
-    for j in range(picked, 0, -1):
-        cur_line.append(j)
+    for range_number in range(picked, 0, -1):
+        cur_line.append(range_number)
 
     # Step 1: Take the next line of $picked length
     for i in range(1, total_lines_from_picked + 1):
@@ -239,7 +239,7 @@ def create(max_number, line_length, picked, cover, testmode, path):
             for line in best_lines:
 
                 # Now we need to find the next potential line.
-                
+
                 # Take a copy of the current line so we can work off that.
                 cur_line2 = copy.copy(cur_line)
 
